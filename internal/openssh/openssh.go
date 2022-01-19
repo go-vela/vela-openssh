@@ -37,6 +37,9 @@ const (
 	TempIdentityFilePrefix = "vela-plugin-openssh-identity-file-"
 	TempPassphrasePrefix   = "vela-plugin-openssh-passphrase-file-" // #nosec G101
 	TempPasswordPrefix     = "vela-plugin-openssh-password-file-"   // #nosec G101
+
+	// Read-write only for the user who creates this file.
+	TempFilePermissions = 0o600
 )
 
 var (
@@ -74,7 +77,7 @@ func CreateRestrictedFile(fs afero.Fs, fileprefix string, contents string) (stri
 		return "", fmt.Errorf("couldn't inject temporary file contents: %w", err)
 	}
 
-	if err := fs.Chmod(file.Name(), 0o600); err != nil {
+	if err := fs.Chmod(file.Name(), TempFilePermissions); err != nil {
 		return "", fmt.Errorf("couldn't set file permissions: %w", err)
 	}
 	return file.Name(), nil

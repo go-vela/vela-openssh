@@ -20,8 +20,8 @@ build_images() {
 #######
 test_scp() {
   echo "### Testing vela-scp:local image"
-  docker-compose -f docker-compose-scp.yml up --force-recreate --renew-anon-volumes scp-plugin-password   --exit-code-from scp-plugin-password &&
-  docker-compose -f docker-compose-scp.yml up --force-recreate --renew-anon-volumes scp-plugin-passphrase --exit-code-from scp-plugin-passphrase
+  docker-compose -f docker-compose-scp.yml run --rm scp-plugin-password &&
+  docker-compose -f docker-compose-scp.yml run --rm scp-plugin-passphrase
 }
 
 cleanup_scp() {
@@ -35,8 +35,8 @@ cleanup_scp() {
 #######
 test_ssh() {
   echo "### Testing vela-ssh:local image"
-  docker-compose -f docker-compose-ssh.yml up --force-recreate --renew-anon-volumes ssh-plugin-password   --exit-code-from ssh-plugin-password &&
-  docker-compose -f docker-compose-ssh.yml up --force-recreate --renew-anon-volumes ssh-plugin-passphrase --exit-code-from ssh-plugin-passphrase
+  docker-compose -f docker-compose-ssh.yml run --rm ssh-plugin-password &&
+  docker-compose -f docker-compose-ssh.yml run --rm ssh-plugin-passphrase
 }
 
 cleanup_ssh() {

@@ -30,5 +30,4 @@ jobs:
       run: make build
 
     - name: integration test with fake server
-      uses: actions/checkout@v2
       run: make docker-build && make docker-test

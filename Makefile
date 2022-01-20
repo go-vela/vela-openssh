@@ -241,25 +241,13 @@ docker-build:
 	@docker build -f Dockerfile.ssh --no-cache -t vela-ssh:local .
 
 # The `docker-test` target is intended to execute
-# the Docker image for the plugin with test variables.
+# the Docker image for the plugin with test variables
+# for integration testing the plugins work with other systems.
 #
 # Usage: `make docker-test`
 .PHONY: docker-test
 docker-test:
-	@echo
-	@echo "### Testing vela-scp:local image"
-	@(cd examples && docker-compose -f docker-compose-scp.yml build)
-	@(cd examples && docker-compose -f docker-compose-scp.yml up --force-recreate --renew-anon-volumes)&
-	@sleep 5
-	@(cd examples && docker-compose -f docker-compose-scp.yml stop -t 1)
-	@(cd examples && docker-compose -f docker-compose-scp.yml down)
-	@echo
-	@echo "### Testing vela-ssh:local image"
-	@(cd examples && docker-compose -f docker-compose-ssh.yml build)
-	@(cd examples && docker-compose -f docker-compose-ssh.yml up --force-recreate --renew-anon-volumes)&
-	@sleep 5
-	@(cd examples && docker-compose -f docker-compose-ssh.yml stop -t 1)
-	@(cd examples && docker-compose -f docker-compose-ssh.yml down)
+	@test/integration-tests.sh
 
 # The `docker-run-scp` target is intended to execute
 # the Docker image for the scp plugin.

@@ -248,14 +248,14 @@ docker-build:
 docker-test:
 	@echo
 	@echo "### Testing vela-scp:local image"
-	@(cd examples && docker-compose -f docker-compose-scp.yml build --force)
+	@(cd examples && docker-compose -f docker-compose-scp.yml build)
 	@(cd examples && docker-compose -f docker-compose-scp.yml up --force-recreate --renew-anon-volumes)&
 	@sleep 5
 	@(cd examples && docker-compose -f docker-compose-scp.yml stop -t 1)
 	@(cd examples && docker-compose -f docker-compose-scp.yml down)
 	@echo
 	@echo "### Testing vela-ssh:local image"
-	@(cd examples && docker-compose -f docker-compose-ssh.yml build --force)
+	@(cd examples && docker-compose -f docker-compose-ssh.yml build)
 	@(cd examples && docker-compose -f docker-compose-ssh.yml up --force-recreate --renew-anon-volumes)&
 	@sleep 5
 	@(cd examples && docker-compose -f docker-compose-ssh.yml stop -t 1)

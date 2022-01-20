@@ -25,3 +25,10 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: coverage.out
+
+    - name: build for integration test
+      run: make build
+
+    - name: integration test with fake server
+      uses: actions/checkout@v2
+      run: make docker-build && make docker-test

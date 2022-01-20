@@ -19,7 +19,7 @@ services:
       - PARAMETER_SCP_FLAG=-o,StrictHostKeyChecking=no,-o,UserKnownHostsFile=/dev/null,-r
       - PARAMETER_SOURCE=scp://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:22222//etc/ssh/
       - PARAMETER_TARGET=/tmp
-      - PARAMETER_SSHPASS_PASSWORD=2retnuhs
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
 
   scp-plugin-passphrase:
     depends_on:

@@ -9,27 +9,45 @@ services:
     volumes:
       - ./ssh:/etc/ssh
 
-  scp-plugin-password:
+  ########
+  # NOTE #
+  ########
+  # The examples below were picked to match documentation examples.
+  # Please be sure to keep these in sync so that most examples have a matching test.
+  basic-usage-with-scp-schema:
     depends_on:
       - fake-remote-server
     image: vela-scp:local
     environment:
-      - PRETEND_SECRET_USER=alev
-      - PRETEND_SECRET_HOST=fake-remote-server
-      - PARAMETER_SCP_FLAG=-o,StrictHostKeyChecking=no,-o,UserKnownHostsFile=/dev/null,-r
-      - PARAMETER_SOURCE=scp://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:22222//etc/ssh/
+      - PARAMETER_SOURCE=scp://alev@fake-remote-server:22222//etc/hosts
       - PARAMETER_TARGET=/tmp
       - PARAMETER_SSHPASS_PASSWORD=2retnuh
 
-  scp-plugin-passphrase:
+  additional-scp-flags:
     depends_on:
       - fake-remote-server
     image: vela-scp:local
     environment:
-      - PRETEND_SECRET_USER=vela
-      - PRETEND_SECRET_HOST=fake-remote-server
-      - PARAMETER_SCP_FLAG=-o,StrictHostKeyChecking=no,-o,UserKnownHostsFile=/dev/null,-r
-      - PARAMETER_SOURCE=scp://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:22222//etc/ssh/sshd_config
+      - PARAMETER_SOURCE=scp://alev@fake-remote-server:22222//etc/ssh
+      - PARAMETER_TARGET=/tmp
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+      - PARAMETER_SCP_FLAG=-o StrictHostKeyChecking=no,-o UserKnownHostsFile=/dev/null,-r
+
+  password-auth:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - SSHPASS_PASSWORD=2retnuh
+      - PARAMETER_SOURCE=scp://alev@fake-remote-server:22222//etc/hosts
+      - PARAMETER_TARGET=/tmp
+
+  passphrase-auth:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - PARAMETER_SOURCE=scp://vela@fake-remote-server:22222//etc/hosts
       - PARAMETER_TARGET=/tmp
       - |
         PARAMETER_IDENTITY_FILE_CONTENTS=-----BEGIN OPENSSH PRIVATE KEY-----
@@ -50,3 +68,22 @@ services:
         epzuBPDz2A==
         -----END OPENSSH PRIVATE KEY-----
       - PARAMETER_SSHPASS_PASSPHRASE=vela
+
+  additional-secrets-in-params:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - PRETEND_SECRET_USER=alev
+      - PRETEND_SECRET_HOST=fake-remote-server
+      - PRETEND_SECRET_PORT=22222
+      - PARAMETER_SOURCE=scp://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:$$PRETEND_SECRET_PORT//etc/hosts
+      - PARAMETER_TARGET=/tmp
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+
+  override-plugin:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    entrypoint: which
+    command: scp

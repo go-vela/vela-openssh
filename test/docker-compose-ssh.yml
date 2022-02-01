@@ -9,26 +9,46 @@ services:
     volumes:
       - ./ssh:/etc/ssh
 
-  ssh-plugin-password:
+  ########
+  # NOTE #
+  ########
+  # The examples below were picked to match documentation examples.
+  # Please be sure to keep these in sync so that most examples have a matching test.
+  basic-usage-with-ssh-schema:
     depends_on:
       - fake-remote-server
     image: vela-ssh:local
     environment:
-      - PRETEND_SECRET_USER=alev
-      - PRETEND_SECRET_HOST=fake-remote-server
-      - PARAMETER_DESTINATION=ssh://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:22222
-      - PARAMETER_COMMAND=echo "My name is $$(whoami)",pwd,ls ~,echo $$VELA_SSH_PLUGIN_VERSION,echo $$VELA_SSH_PLUGIN_COMMIT
+      - PARAMETER_DESTINATION=ssh://alev@fake-remote-server:22222
+      - PARAMETER_COMMAND=echo "Hello Vela!"
       - PARAMETER_SSHPASS_PASSWORD=2retnuh
 
-  ssh-plugin-passphrase:
+  additional-ssh-flags:
     depends_on:
       - fake-remote-server
     image: vela-ssh:local
     environment:
-      - PRETEND_SECRET_USER=vela
-      - PRETEND_SECRET_HOST=fake-remote-server
-      - PARAMETER_DESTINATION=ssh://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:22222
-      - PARAMETER_COMMAND=echo "My name is $$(whoami)",pwd,ls ~,echo $$VELA_SSH_PLUGIN_VERSION,echo $$VELA_SSH_PLUGIN_COMMIT
+      - PARAMETER_DESTINATION=ssh://alev@fake-remote-server:22222
+      - PARAMETER_COMMAND=echo "Hello Vela!"
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+      - PARAMETER_SSH_FLAG=-o StrictHostKeyChecking=no,-o UserKnownHostsFile=/dev/null,-v
+
+  password-auth:
+    depends_on:
+      - fake-remote-server
+    image: vela-ssh:local
+    environment:
+      - SSHPASS_PASSWORD=2retnuh
+      - PARAMETER_DESTINATION=ssh://alev@fake-remote-server:22222
+      - PARAMETER_COMMAND=echo "Hello Vela!"
+
+  passphrase-auth:
+    depends_on:
+      - fake-remote-server
+    image: vela-ssh:local
+    environment:
+      - PARAMETER_DESTINATION=ssh://vela@fake-remote-server:22222
+      - PARAMETER_COMMAND=echo "Hello Vela!"
       - |
         PARAMETER_IDENTITY_FILE_CONTENTS=-----BEGIN OPENSSH PRIVATE KEY-----
         b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABDdEo/VI0
@@ -48,3 +68,22 @@ services:
         epzuBPDz2A==
         -----END OPENSSH PRIVATE KEY-----
       - PARAMETER_SSHPASS_PASSPHRASE=vela
+
+  additional-secrets-in-params:
+    depends_on:
+      - fake-remote-server
+    image: vela-ssh:local
+    environment:
+      - PRETEND_SECRET_USER=alev
+      - PRETEND_SECRET_HOST=fake-remote-server
+      - PRETEND_SECRET_PORT=22222
+      - PARAMETER_DESTINATION=ssh://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:$$PRETEND_SECRET_PORT
+      - PARAMETER_COMMAND=echo "Hello Vela!"
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+
+  override-plugin:
+    depends_on:
+      - fake-remote-server
+    image: vela-ssh:local
+    entrypoint: ssh
+    command: -V

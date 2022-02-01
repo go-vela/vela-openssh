@@ -133,7 +133,7 @@ steps:
     parameters:
       source:
         - ./relative/path/to/file/in/vela/workspace
-+     target: scp://$SECRET_USER@$SECRET_HOST:$SOME_SECRET_PORT/path
++     target: scp://$SECRET_USER@$SECRET_HOST:$SECRET_PORT/path
 ```
 
 ### Using the container without the plugin logic

@@ -129,7 +129,7 @@ steps:
 +     - source: some_secret_port
 +       target: secret_port
     parameters:
-+     destination: ssh://$SECRET_USER@$SECRET_HOST:$SOME_SECRET_PORT
++     destination: ssh://$SECRET_USER@$SECRET_HOST:$SECRET_PORT
       command:
         - echo "Hello Vela!"
 ```

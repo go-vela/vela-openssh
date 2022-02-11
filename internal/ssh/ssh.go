@@ -156,6 +156,9 @@ func (c *Config) Setup() error {
 	return nil
 }
 
+// Binary returns the system path location for either the ssh binary (by default)
+// or the sshpass binary depending on if the plugin configuration requires
+// the use of sshpass or not.
 func (c *Config) Binary() string {
 	if c.useSSHPass() {
 		return c.locationSSHPASSbinary
@@ -164,6 +167,10 @@ func (c *Config) Binary() string {
 	return c.locationSSHbinary
 }
 
+// Arguments returns a string slice representation of all of the command
+// line arguments required for the binary to work. If using sshpass parameters
+// they will be placed at the start of the slice while all others float to the end.
+// Think of these as the commands a user would normally manually type to use the binary.
 func (c *Config) Arguments() []string {
 	args := []string{}
 
@@ -211,6 +218,11 @@ func (c *Config) Arguments() []string {
 	return args
 }
 
+// Environment returns a mapping of key/value strings representing any additional
+// environmental variables a particular plugin might need. This plugin doesn't
+// require anything in particular, but a few env vars are provided so that users
+// can place that in their pipeline for diagnostic purposes.
+
 func (c *Config) Environment() map[string]string {
 	return map[string]string{
 		"VELA_SSH_PLUGIN_VERSION": openssh.PluginVersion.Semantic(),
@@ -218,7 +230,10 @@ func (c *Config) Environment() map[string]string {
 	}
 }
 
-// Plugin Internal Functions.
+// useSSHPass returns true if the plugin configuration requires the use of the sshpass binary.
+// This typically only happens if a password or passphrase is provided but if a user also wants
+// to override the sshpass flags then we also will inject sshpass into the mix.
+
 func (c *Config) useSSHPass() bool {
 	return len(c.SSHPASSFlags)+
 		len(c.SSHPassword)+

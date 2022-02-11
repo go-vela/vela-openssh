@@ -341,7 +341,7 @@ func TestArguments(t *testing.T) {
 			wantCommand: testutils.FlattenArguments(
 				testutils.MockSSHPassPath,
 				openssh.DefaultSSHPassFlags,
-				"-Ppassphrase",
+				"-Passphrase",
 				"-f", "/tmp/vela-plugin-openssh-passphrase-file-",
 				testutils.MockSCPPath,
 				openssh.DefaultSCPFlags,
@@ -381,7 +381,7 @@ func TestArguments(t *testing.T) {
 			wantCommand: testutils.FlattenArguments(
 				testutils.MockSSHPassPath,
 				"-v",
-				"-Ppassphrase",
+				"-Passphrase",
 				"-f", "/tmp/vela-plugin-openssh-passphrase-file-",
 				testutils.MockSCPPath,
 				"-o", "StrictHostKeyChecking=yes",

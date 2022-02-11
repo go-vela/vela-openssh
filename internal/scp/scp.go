@@ -198,7 +198,7 @@ func (c *Config) Arguments() []string {
 			args = append(args, "-f")
 			args = append(args, c.locationPasswordFile)
 		} else if len(c.SSHPassphrase) > 0 {
-			args = append(args, "-Ppassphrase")
+			args = append(args, "-Passphrase")
 			args = append(args, "-f")
 			args = append(args, c.locationPassphraseFile)
 		}

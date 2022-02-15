@@ -1,0 +1,7 @@
+Port 22222
+PermitRootLogin yes
+AuthorizedKeysFile	.ssh/authorized_keys
+AllowTcpForwarding yes
+GatewayPorts yes
+X11Forwarding yes
+PasswordAuthentication yes

@@ -1,0 +1,11 @@
+FROM alpine:latest
+
+RUN apk add openssh && \
+    adduser -D vela -h /home/vela && \
+    echo -n "vela:hunter2" | chpasswd && \
+    mkdir -p /home/vela/.ssh/ && \
+    echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC76zDdM8ufzSIy9FRNtnnRh2vl93tmYCtyHH24b8fGyp6DI8ArtCu9muEsRNGB+zwqyMxSWoXhnJkpwQ3Jtc3vHs3IZZGB7UNNHxzOj1wHeU2o+jcUGbl6fANSa6G2GATTXE+e568L65dnE73tUjihtCpK5WYXraa9l61kg82Jfw==" > /home/vela/.ssh/authorized_keys && \
+    adduser -D alev -h /home/alev && \
+    echo -n "alev:2retnuh" | chpasswd
+
+ENTRYPOINT ["/usr/sbin/sshd", "-D", "-e"]

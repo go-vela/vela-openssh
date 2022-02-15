@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  fake-remote-server:
+    container_name: fake-remote-server
+    build:
+      context: .
+      dockerfile: Dockerfile.ssh-server
+    volumes:
+      - ./ssh:/etc/ssh
+
+  ########
+  # NOTE #
+  ########
+  # The examples below were picked to match documentation examples.
+  # Please be sure to keep these in sync so that most examples have a matching test.
+  basic-usage-with-scp-schema:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - PARAMETER_SOURCE=scp://alev@fake-remote-server:22222//etc/hosts
+      - PARAMETER_TARGET=/tmp
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+
+  additional-scp-flags:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - PARAMETER_SOURCE=scp://alev@fake-remote-server:22222//etc/ssh
+      - PARAMETER_TARGET=/tmp
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+      - PARAMETER_SCP_FLAG=-o StrictHostKeyChecking=no,-o UserKnownHostsFile=/dev/null,-r
+
+  password-auth:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - SSHPASS_PASSWORD=2retnuh
+      - PARAMETER_SOURCE=scp://alev@fake-remote-server:22222//etc/hosts
+      - PARAMETER_TARGET=/tmp
+
+  passphrase-auth:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - PARAMETER_SOURCE=scp://vela@fake-remote-server:22222//etc/hosts
+      - PARAMETER_TARGET=/tmp
+      - |
+        PARAMETER_IDENTITY_FILE_CONTENTS=-----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABDdEo/VI0
+        CMk0tfLeYGrITTAAAAEAAAAAEAAACXAAAAB3NzaC1yc2EAAAADAQABAAAAgQC76zDdM8uf
+        zSIy9FRNtnnRh2vl93tmYCtyHH24b8fGyp6DI8ArtCu9muEsRNGB+zwqyMxSWoXhnJkpwQ
+        3Jtc3vHs3IZZGB7UNNHxzOj1wHeU2o+jcUGbl6fANSa6G2GATTXE+e568L65dnE73tUjih
+        tCpK5WYXraa9l61kg82JfwAAAgD+4J30oL9avFYyuQ18Q9XE0eWPNQ48I9iuIahhhIHM5n
+        4U5Fv/8D5Q+ry3VYnzd+mf8fIBxR3/IASeENMH3+n5AoMftpsoen/SJphowBe78bdhB1e8
+        mF1KjNbXzYeji/PMR7lzBOHrKPdXai25tSaXLyHXCOvVgNJkf39aEawv9tTv9q/k4d+u75
+        7kaStSY5yIlVE5ZaUo8Jr7oUDIkdiPk+93kFSYhBRQdPrwhd2A5APs09vlUBNpUA4AgiDs
+        RtEhFQtlExTA1IqPMNiUF8b+yWVQ7MYSKUj39LkQIj7ak9Hz81Uhw/C+aB6ve7hBG2sQcK
+        YpMkz4yQ2RiKu5ak4RojlGpYcwI4HgiRntYh0KHHyrJftq6h5m4v+5NriiGUSr88AlQnt3
+        eIsDHDb2y4Nax8LERa35sNHHJ5D4iegDHqNdlomCfpN79UrqtpBbbhJioUYI3tYM4YTAYq
+        T/OQSOy4LR7qoXnCgT+Ov+VFNkEkHJy9bQ2qCxxLa2Mx2uEI6B12tRFG36ufSSuOjxUi2a
+        23Y+BExR4jn1imwc9lPWfQedUeZe24wBQdzZmWcaNTnnjow9UlszfBWvId0PLlkJe8r5//
+        /oPHl/rkCcESYCF8vuPJPPpVoAP+GlQKVxilSZxKUlgIrXlArnhsxJh6kL+xW+UU9rf2Eo
+        epzuBPDz2A==
+        -----END OPENSSH PRIVATE KEY-----
+      - PARAMETER_SSHPASS_PASSPHRASE=vela
+
+  additional-secrets-in-params:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    environment:
+      - PRETEND_SECRET_USER=alev
+      - PRETEND_SECRET_HOST=fake-remote-server
+      - PRETEND_SECRET_PORT=22222
+      - PARAMETER_SOURCE=scp://$$PRETEND_SECRET_USER@$$PRETEND_SECRET_HOST:$$PRETEND_SECRET_PORT//etc/hosts
+      - PARAMETER_TARGET=/tmp
+      - PARAMETER_SSHPASS_PASSWORD=2retnuh
+
+  override-plugin:
+    depends_on:
+      - fake-remote-server
+    image: vela-scp:local
+    entrypoint: which
+    command: scp

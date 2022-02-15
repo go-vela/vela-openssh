@@ -1,0 +1,42 @@
+# name of the action
+name: test
+
+# trigger on pull_request or push events
+on:
+  pull_request:
+  push:
+
+# pipeline to execute
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.17
+    steps:
+    - name: clone
+      uses: actions/checkout@v2
+
+    - name: test
+      run: |
+        go test -covermode=atomic -coverprofile=coverage.out ./...
+
+    - name: coverage
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: coverage.out
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs:
+    - unit-test
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v1
+
+    - name: build for integration test
+      run: make build
+
+    - name: integration test with fake server
+      run: make docker-build && make docker-test

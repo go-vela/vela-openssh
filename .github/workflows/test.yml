@@ -40,3 +40,47 @@ jobs:
 
     - name: integration test with fake server
       run: make docker-build && make docker-test
+
+  publish-test:
+    runs-on: ubuntu-latest
+    needs:
+    - unit-test
+    - integration-test
+    container:
+      image: golang:1.17
+    steps:
+    - name: clone
+      uses: actions/checkout@v2
+      with:
+        # ensures we fetch tag history for the repository
+        fetch-depth: 0
+
+    - name: build
+      env:
+        GOOS: linux
+        CGO_ENABLED: '0'
+      run: |
+        make build-static-ci
+
+    - name: grab dependency versions from makefile
+      run: |
+        grep "^OPENSSH.*=" Makefile >> $GITHUB_ENV
+        grep "^SSHPASS_VERSION.*=" Makefile >> $GITHUB_ENV
+
+    - name: publish scp
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: target/vela-scp
+        cache: true
+        dockerfile: Dockerfile.scp
+        no_push: true
+        buildargs: OPENSSH_VERSION,SSHPASS_VERSION
+
+    - name: publish ssh
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: target/vela-ssh
+        cache: true
+        dockerfile: Dockerfile.ssh
+        no_push: true
+        buildargs: OPENSSH_VERSION,SSHPASS_VERSION

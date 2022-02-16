@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/crates/l/gl.svg)](../LICENSE)
 [![GoDoc](https://godoc.org/github.com/go-vela/vela-openssh?status.svg)](https://godoc.org/github.com/go-vela/vela-openssh)
 [![Go Report Card](https://goreportcard.com/badge/go-vela/vela-openssh)](https://goreportcard.com/report/go-vela/vela-openssh)
-[![codecov](https://codecov.io/gh/go-vela/vela-openssh/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-openssh)
+[![codecov](https://codecov.io/gh/go-vela/vela-openssh/branch/main/graph/badge.svg)](https://codecov.io/gh/go-vela/vela-openssh)
 
 A set of Vela plugins designed to make common SSH and SCP actions easy to do within the Vela CI environment.
 

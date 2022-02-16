@@ -41,11 +41,8 @@ jobs:
     - name: integration test with fake server
       run: make docker-build && make docker-test
 
-  publish-test:
+  gha-publish-test:
     runs-on: ubuntu-latest
-    needs:
-    - unit-test
-    - integration-test
     container:
       image: golang:1.17
     steps:

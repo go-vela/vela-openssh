@@ -9,7 +9,8 @@ BUILD_DATE = $(shell date +%Y-%m-%dT%H:%M:%SZ)
 # This is the ONLY place these hardcoded versions are set.
 # They're used in the Dockerfile the GitHub Actions workflow,
 # the integration tests, and the static build flags for Go.
-OPENSSH_VERSION = 8.8_p1-r1
+# Note: No space between the equals and the value else issues arise.
+OPENSSH_VERSION=8.8_p1-r1
 SSHPASS_VERSION=1.09-r0
 
 # check if a git commit sha is already set

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -22,8 +23,11 @@ func main() {
 				Email: "vela@target.com",
 			},
 		},
-		Action:  run,
-		Version: openssh.PluginVersion.Semantic(),
+		Action: run,
+		// The version field looks gross but in practice is really only seen and used in integration tests
+		// or when a plugin is misconfigured. We should log the version information of dependent binaries
+		// to assist with debugging why a plugin might be failing to operate in a way users expect.
+		Version: fmt.Sprintf("Plugin: %s - OpenSSH: %s - SSHPass: %s", openssh.PluginVersion.Semantic(), openssh.OpenSSHVersion, openssh.SSHPassVersion),
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "destination",
@@ -103,11 +107,13 @@ func run(c *cli.Context) error {
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"code":     "https://github.com/go-vela/vela-openssh",
-		"docs":     "https://go-vela.github.io/docs/plugins/registry/ssh",
-		"registry": "https://hub.docker.com/r/target/vela-ssh",
-		"version":  openssh.PluginVersion.Semantic(),
-		"commit":   openssh.PluginVersion.Metadata.GitCommit,
+		"code":            "https://github.com/go-vela/vela-openssh",
+		"docs":            "https://go-vela.github.io/docs/plugins/registry/ssh",
+		"registry":        "https://hub.docker.com/r/target/vela-ssh",
+		"commit":          openssh.PluginVersion.Metadata.GitCommit,
+		"version-plugin":  openssh.PluginVersion.Semantic(),
+		"version-openssh": openssh.OpenSSHVersion,
+		"version-sshpass": openssh.SSHPassVersion,
 	}).Info("Vela SSH Plugin")
 
 	bp := binarywrapper.Plugin{

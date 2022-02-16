@@ -14,6 +14,12 @@ import (
 	"github.com/spf13/afero"
 )
 
+// These are build time constants for use in logging which binaries a plugin happens to be using.
+var (
+	OpenSSHVersion = "unknown"
+	SSHPassVersion = "unknown"
+)
+
 var (
 	// PluginVersion provides a common place to pull the plugin configuration from.
 	PluginVersion = version.New()

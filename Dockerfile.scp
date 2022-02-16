@@ -8,7 +8,16 @@
 
 FROM alpine:latest
 
-RUN apk add --update --no-cache ca-certificates openssh sshpass
+# Build args to be used from the Makefile
+ARG OPENSSH_VERSION
+ARG SSHPASS_VERSION
+
+# Set environmental variables to the build args so the container
+# keeps the history of what it was built with if users want to check.
+ENV OPENSSH_VERSION=$OPENSSH_VERSION
+ENV SSHPASS_VERSION=$SSHPASS_VERSION
+
+RUN apk add --update --no-cache ca-certificates openssh=${OPENSSH_VERSION} sshpass=${SSHPASS_VERSION}
 
 COPY release/vela-scp /bin/vela-scp
 

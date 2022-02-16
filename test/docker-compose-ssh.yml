@@ -87,3 +87,12 @@ services:
     image: vela-ssh:local
     entrypoint: ssh
     command: -V
+
+  ensure-version-info-set:
+    depends_on:
+      - fake-remote-server
+    image: vela-ssh:local
+    volumes:
+      - ./ensure-version-info-set.sh:/ensure-version-info-set.sh
+    entrypoint: sh
+    command: /ensure-version-info-set.sh ssh

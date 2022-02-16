@@ -11,6 +11,7 @@ SCP_TESTS=(
   passphrase-auth
   additional-secrets-in-params
   override-plugin
+  ensure-version-info-set
 )
 
 SSH_TESTS=(
@@ -20,6 +21,7 @@ SSH_TESTS=(
   passphrase-auth
   additional-secrets-in-params
   override-plugin
+  ensure-version-info-set
 )
 
 # Make sure we move into the folder where the integration tests

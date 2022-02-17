@@ -5,6 +5,14 @@
 # capture the current date we build the application from
 BUILD_DATE = $(shell date +%Y-%m-%dT%H:%M:%SZ)
 
+# Versions installed for OpenSSH and SSHPass binaries.
+# This is the ONLY place these hardcoded versions are set.
+# They're used in the Dockerfile the GitHub Actions workflow,
+# the integration tests, and the static build flags for Go.
+# Note: No space between the equals and the value else issues arise.
+OPENSSH_VERSION=8.8_p1-r1
+SSHPASS_VERSION=1.09-r0
+
 # check if a git commit sha is already set
 ifndef GITHUB_SHA
 	# capture the current git commit sha we build the application from
@@ -27,7 +35,7 @@ endif
 # The reference here to Kaniko is so that this repo doesn't need to duplicate
 # the version.go file across multiple plugin repositories. Ideally that file would
 # migrate into its own repository at some point so that it can be widely used.
-LD_FLAGS = -X github.com/go-vela/vela-kaniko/version.Commit=${GITHUB_SHA} -X github.com/go-vela/vela-kaniko/version.Date=${BUILD_DATE} -X github.com/go-vela/vela-kaniko/version.Go=${GOLANG_VERSION} -X github.com/go-vela/vela-kaniko/version.Tag=${GITHUB_TAG}
+LD_FLAGS = -X github.com/go-vela/vela-openssh/internal/openssh.OpenSSHVersion=${OPENSSH_VERSION} -X github.com/go-vela/vela-openssh/internal/openssh.SSHPassVersion=${SSHPASS_VERSION} -X github.com/go-vela/vela-kaniko/version.Commit=${GITHUB_SHA} -X github.com/go-vela/vela-kaniko/version.Date=${BUILD_DATE} -X github.com/go-vela/vela-kaniko/version.Go=${GOLANG_VERSION} -X github.com/go-vela/vela-kaniko/version.Tag=${GITHUB_TAG}
 
 # The `clean` target is intended to clean the workspace
 # and prepare the local changes for submission.
@@ -237,8 +245,8 @@ bump-deps-full: check
 docker-build:
 	@echo
 	@echo "### Building vela-scp:local image"
-	@docker build -f Dockerfile.scp --no-cache -t vela-scp:local .
-	@docker build -f Dockerfile.ssh --no-cache -t vela-ssh:local .
+	@docker build -f Dockerfile.scp --no-cache --build-arg OPENSSH_VERSION=${OPENSSH_VERSION} --build-arg SSHPASS_VERSION=${SSHPASS_VERSION} -t vela-scp:local .
+	@docker build -f Dockerfile.ssh --no-cache --build-arg OPENSSH_VERSION=${OPENSSH_VERSION} --build-arg SSHPASS_VERSION=${SSHPASS_VERSION} -t vela-ssh:local .
 
 # The `docker-test` target is intended to execute
 # the Docker image for the plugin with test variables

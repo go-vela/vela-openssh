@@ -32,6 +32,11 @@ jobs:
       run: |
         make build-static-ci
 
+    - name: grab dependency versions from makefile
+      run: |
+        grep "^OPENSSH.*=" Makefile >> $GITHUB_ENV
+        grep "^SSHPASS_VERSION.*=" Makefile >> $GITHUB_ENV
+
     - name: publish scp
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -41,6 +46,7 @@ jobs:
         dockerfile: Dockerfile.scp
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        buildargs: OPENSSH_VERSION,SSHPASS_VERSION
 
     - name: publish ssh
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -51,3 +57,4 @@ jobs:
         dockerfile: Dockerfile.ssh
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        buildargs: OPENSSH_VERSION,SSHPASS_VERSION

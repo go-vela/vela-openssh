@@ -10,7 +10,9 @@ BUILD_DATE = $(shell date +%Y-%m-%dT%H:%M:%SZ)
 # They're used in the Dockerfile the GitHub Actions workflow,
 # the integration tests, and the static build flags for Go.
 # Note: No space between the equals and the value else issues arise.
+# renovate: datasource=repology depName=alpine_3_15/openssh versioning=loose
 OPENSSH_VERSION=8.8_p1-r1
+# renovate: datasource=repology depName=alpine_3_15/sshpass versioning=loose
 SSHPASS_VERSION=1.09-r0
 
 # check if a git commit sha is already set

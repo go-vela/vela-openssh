@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 package scp
 
 import (
@@ -80,7 +84,7 @@ func TestValidateErrors(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			if err := test.config.Validate(); err == nil {
 				t.Errorf("Validate() should have raised an error")
-			} else if (test.wantErr != nil) && (err != test.wantErr) {
+			} else if (test.wantErr != nil) && !errors.Is(err, test.wantErr) {
 				t.Errorf("Validate() returned wrong error\ngot:    %s\nwanted: %s", err, test.wantErr)
 			}
 		})

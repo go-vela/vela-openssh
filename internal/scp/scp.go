@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 // This package wraps the scp portion of the OpenSSH binaries to allow
 // for copying files to/from remote and local file systems.
 
@@ -116,12 +120,15 @@ func (c *Config) Setup() error {
 		tempSCPPath := fmt.Sprintf("%s/scp", path)
 		tempSSHPath := fmt.Sprintf("%s/ssh", path)
 		tempSSHPassPath := fmt.Sprintf("%s/sshpass", path)
+
 		if ok, _ := afero.Exists(c.fs, tempSCPPath); ok && len(c.locationSCPbinary) == 0 {
 			c.locationSCPbinary = tempSCPPath
 		}
+
 		if ok, _ := afero.Exists(c.fs, tempSSHPath); ok && len(c.locationSSHbinary) == 0 {
 			c.locationSSHbinary = tempSSHPath
 		}
+
 		if ok, _ := afero.Exists(c.fs, tempSSHPassPath); ok && len(c.locationSSHPASSbinary) == 0 {
 			c.locationSSHPASSbinary = tempSSHPassPath
 		}
@@ -144,6 +151,7 @@ func (c *Config) Setup() error {
 		if err != nil {
 			return err
 		}
+
 		c.IdentityFilePath = append([]string{filename}, c.IdentityFilePath...)
 	}
 
@@ -152,6 +160,7 @@ func (c *Config) Setup() error {
 		if err != nil {
 			return err
 		}
+
 		c.locationPasswordFile = filename
 	}
 
@@ -160,6 +169,7 @@ func (c *Config) Setup() error {
 		if err != nil {
 			return err
 		}
+
 		c.locationPassphraseFile = filename
 	}
 

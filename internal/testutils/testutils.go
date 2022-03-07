@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 package testutils
 
 import (
@@ -29,6 +33,7 @@ func CreateMockFiles(t *testing.T, filename ...string) afero.Fs {
 			t.FailNow()
 		}
 	}
+
 	return fs
 }
 
@@ -70,6 +75,7 @@ func FlattenArguments(args ...interface{}) (flatArgs []string) {
 		default:
 		}
 	}
+
 	return
 }
 

@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 // binarywrapper_test was chosen to be blackbox testing of the wrapper
 // to try and better understand the behavior that end consumers of the wrapper
 // might experience as they're using this. That, and there isn't much "internal"
@@ -32,12 +36,14 @@ func TestMain(m *testing.M) {
 		if strings.Contains(strings.Join(os.Args, ""), "$") {
 			os.Exit(1)
 		}
+
 		os.Exit(0)
 	case testMainSuccessOutput:
 		if len(os.Args) != 4 {
 			fmt.Printf("invalid os.Args: %s", strings.Join(os.Args, " "))
 			os.Exit(2)
 		}
+
 		fmt.Println(os.Args[2])
 		fmt.Fprint(os.Stderr, os.Args[3])
 		os.Exit(0)
@@ -46,6 +52,7 @@ func TestMain(m *testing.M) {
 			fmt.Printf("invalid os.Args: %s", strings.Join(os.Args, " "))
 			os.Exit(3)
 		}
+
 		fmt.Println(os.Args[2])
 		fmt.Fprint(os.Stderr, os.Args[3])
 		os.Exit(4)
@@ -84,6 +91,7 @@ func (m *mockExecConfig) Arguments() []string {
 	if len(m.arguments) > 0 {
 		return m.arguments
 	}
+
 	return []string{}
 }
 
@@ -91,6 +99,7 @@ func (m *mockExecConfig) Environment() map[string]string {
 	if m.environment != nil {
 		return m.environment
 	}
+
 	return map[string]string{}
 }
 

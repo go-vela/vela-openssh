@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 // This package wraps the ssh portion of the OpenSSH binaries to allow
 // for executing scripts and commands on remote systems.
 
@@ -113,9 +117,11 @@ func (c *Config) Setup() error {
 	for _, path := range openssh.BinSearchLocations {
 		tempSSHPath := fmt.Sprintf("%s/ssh", path)
 		tempSSHPassPath := fmt.Sprintf("%s/sshpass", path)
+
 		if ok, _ := afero.Exists(c.fs, tempSSHPath); ok && len(c.locationSSHbinary) == 0 {
 			c.locationSSHbinary = tempSSHPath
 		}
+
 		if ok, _ := afero.Exists(c.fs, tempSSHPassPath); ok && len(c.locationSSHPASSbinary) == 0 {
 			c.locationSSHPASSbinary = tempSSHPassPath
 		}
@@ -134,6 +140,7 @@ func (c *Config) Setup() error {
 		if err != nil {
 			return err
 		}
+
 		c.IdentityFilePath = append([]string{filename}, c.IdentityFilePath...)
 	}
 
@@ -142,6 +149,7 @@ func (c *Config) Setup() error {
 		if err != nil {
 			return err
 		}
+
 		c.locationPasswordFile = filename
 	}
 
@@ -150,6 +158,7 @@ func (c *Config) Setup() error {
 		if err != nil {
 			return err
 		}
+
 		c.locationPassphraseFile = filename
 	}
 

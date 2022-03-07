@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 package openssh
 
 import (
@@ -86,5 +90,6 @@ func CreateRestrictedFile(fs afero.Fs, fileprefix string, contents string) (stri
 	if err := fs.Chmod(file.Name(), TempFilePermissions); err != nil {
 		return "", fmt.Errorf("couldn't set file permissions: %w", err)
 	}
+
 	return file.Name(), nil
 }

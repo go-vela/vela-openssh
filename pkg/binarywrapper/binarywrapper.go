@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
 // Package binarywrapper is a utility package that makes wrapping binaries a little easier
 // as it aims to provide a common structure to use for converting binaries
 // into plugins. Along the way it allows for some setup tasks, validation,
@@ -107,6 +111,7 @@ func (p *Plugin) Exec() error {
 	// here to NOT expand the arguments with environmental variables yet
 	// as those might contain secrets or other information we don't want to leak.
 	pluginArguments := p.Arguments()
+
 	logrus.WithFields(logrus.Fields{
 		"binary":    p.Binary(),
 		"arguments": p.Arguments(),
@@ -152,15 +157,18 @@ func (p *Plugin) Exec() error {
 			if outBuffer.Len() > 0 {
 				logrus.Info(outBuffer.String())
 			}
+
 			if errorBuffer.Len() > 0 {
 				logrus.Error(errorBuffer.String())
 			}
+
 			return fmt.Errorf("%w: %s", ErrExec, err)
 		}
 
 		if outBuffer.Len() > 0 {
 			logrus.Info(outBuffer.String())
 		}
+
 		if errorBuffer.Len() > 0 {
 			logrus.Error(errorBuffer.String())
 		}

@@ -6,7 +6,7 @@ require (
 	github.com/go-vela/vela-kaniko v0.8.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/afero v1.8.2
-	github.com/urfave/cli/v2 v2.3.0
+	github.com/urfave/cli/v2 v2.4.0
 )
 
 require (

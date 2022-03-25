@@ -2,9 +2,6 @@
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
-# capture the current date we build the application from
-BUILD_DATE = $(shell date +%Y-%m-%dT%H:%M:%SZ)
-
 # Versions installed for OpenSSH and SSHPass binaries.
 # This is the ONLY place these hardcoded versions are set.
 # They're used in the Dockerfile the GitHub Actions workflow,
@@ -15,29 +12,17 @@ OPENSSH_VERSION=8.8_p1-r1
 # renovate: datasource=repology depName=alpine_3_15/sshpass versioning=loose
 SSHPASS_VERSION=1.09-r0
 
-# check if a git commit sha is already set
-ifndef GITHUB_SHA
-	# capture the current git commit sha we build the application from
-	GITHUB_SHA = $(shell git rev-parse HEAD)
-endif
-
 # check if a git tag is already set
 ifndef GITHUB_TAG
 	# capture the current git tag we build the application from
 	GITHUB_TAG = $(shell git describe --tag --abbrev=0)
 endif
 
-# check if a go version is already set
-ifndef GOLANG_VERSION
-	# capture the current go version we build the application from
-	GOLANG_VERSION = $(shell go version | awk '{ print $$3 }')
-endif
-
 # create a list of linker flags for building the golang application
-# The reference here to Kaniko is so that this repo doesn't need to duplicate
-# the version.go file across multiple plugin repositories. Ideally that file would
-# migrate into its own repository at some point so that it can be widely used.
-LD_FLAGS = -X github.com/go-vela/vela-openssh/internal/openssh.OpenSSHVersion=${OPENSSH_VERSION} -X github.com/go-vela/vela-openssh/internal/openssh.SSHPassVersion=${SSHPASS_VERSION} -X github.com/go-vela/vela-kaniko/version.Commit=${GITHUB_SHA} -X github.com/go-vela/vela-kaniko/version.Date=${BUILD_DATE} -X github.com/go-vela/vela-kaniko/version.Go=${GOLANG_VERSION} -X github.com/go-vela/vela-kaniko/version.Tag=${GITHUB_TAG}
+LD_FLAGS = \
+	-X github.com/go-vela/vela-openssh/internal/openssh.OpenSSHVersion=${OPENSSH_VERSION} \
+	-X github.com/go-vela/vela-openssh/internal/openssh.SSHPassVersion=${SSHPASS_VERSION} \
+	-X github.com/go-vela/vela-openssh/internal/openssh.PluginVersion=${GITHUB_TAG}
 
 # The `clean` target is intended to clean the workspace
 # and prepare the local changes for submission.

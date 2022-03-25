@@ -31,7 +31,7 @@ func main() {
 		// The version field looks gross but in practice is really only seen and used in integration tests
 		// or when a plugin is misconfigured. We should log the version information of dependent binaries
 		// to assist with debugging why a plugin might be failing to operate in a way users expect.
-		Version: fmt.Sprintf("Plugin: %s - OpenSSH: %s - SSHPass: %s", openssh.PluginVersion.Semantic(), openssh.OpenSSHVersion, openssh.SSHPassVersion),
+		Version: fmt.Sprintf("Plugin: %s - OpenSSH: %s - SSHPass: %s", openssh.PluginVersion, openssh.OpenSSHVersion, openssh.SSHPassVersion),
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "destination",
@@ -110,12 +110,16 @@ func run(c *cli.Context) error {
 		})
 	}
 
+	if openssh.DirtyBuild {
+		logrus.Warnf("binary built from modified commit %s", openssh.GitCommit)
+	}
+
 	logrus.WithFields(logrus.Fields{
 		"code":            "https://github.com/go-vela/vela-openssh",
 		"docs":            "https://go-vela.github.io/docs/plugins/registry/ssh",
 		"registry":        "https://hub.docker.com/r/target/vela-ssh",
-		"commit":          openssh.PluginVersion.Metadata.GitCommit,
-		"version-plugin":  openssh.PluginVersion.Semantic(),
+		"commit":          openssh.GitCommit,
+		"version-plugin":  openssh.PluginVersion,
 		"version-openssh": openssh.OpenSSHVersion,
 		"version-sshpass": openssh.SSHPassVersion,
 	}).Info("Vela SSH Plugin")

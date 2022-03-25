@@ -234,8 +234,8 @@ func (c *Config) Arguments() []string {
 
 func (c *Config) Environment() map[string]string {
 	return map[string]string{
-		"VELA_SSH_PLUGIN_VERSION": openssh.PluginVersion.Semantic(),
-		"VELA_SSH_PLUGIN_COMMIT":  openssh.PluginVersion.Metadata.GitCommit,
+		"VELA_SSH_PLUGIN_VERSION": openssh.PluginVersion,
+		"VELA_SSH_PLUGIN_COMMIT":  openssh.GitCommit,
 	}
 }
 

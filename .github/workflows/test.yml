@@ -28,6 +28,8 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
+    container:
+      image: golang:1.18
     needs:
     - unit-test
 

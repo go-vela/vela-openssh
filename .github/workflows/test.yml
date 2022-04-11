@@ -28,8 +28,6 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
-    container:
-      image: golang:1.18
     needs:
     - unit-test
 
@@ -38,7 +36,12 @@ jobs:
       uses: actions/checkout@v3
 
     - name: build for integration test
-      run: make build
+      uses: docker://golang:1.18
+      env:
+        GOOS: linux
+        CGO_ENABLED: '0'
+      run: |
+        make build-static-ci
 
     - name: integration test with fake server
       run: make docker-build && make docker-test

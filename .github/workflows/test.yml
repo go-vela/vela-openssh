@@ -37,11 +37,12 @@ jobs:
 
     - name: build for integration test
       uses: docker://golang:1.18
+      with:
+        entrypoint: make
+        args: build-static-ci
       env:
         GOOS: linux
         CGO_ENABLED: '0'
-      run: |
-        make build-static-ci
 
     - name: integration test with fake server
       run: make docker-build && make docker-test

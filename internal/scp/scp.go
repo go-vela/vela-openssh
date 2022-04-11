@@ -243,8 +243,8 @@ func (c *Config) Arguments() []string {
 // can place that in their pipeline for diagnostic purposes.
 func (c *Config) Environment() map[string]string {
 	return map[string]string{
-		"VELA_SCP_PLUGIN_VERSION": openssh.PluginVersion.Semantic(),
-		"VELA_SCP_PLUGIN_COMMIT":  openssh.PluginVersion.Metadata.GitCommit,
+		"VELA_SCP_PLUGIN_VERSION": openssh.PluginVersion,
+		"VELA_SCP_PLUGIN_COMMIT":  openssh.GitCommit,
 	}
 }
 

@@ -7,14 +7,8 @@ package openssh
 import (
 	"errors"
 	"fmt"
+	"runtime/debug"
 
-	// We're not using anything from Kaniko plugin except the version.go file
-	// so that we don't need to duplicate that bit of code and keep it in sync
-	// across many different plugins with the same need. Ideally that version.go
-	// would be in its own package somewhere so it wasn't tied to any particular plugin.
-	// If this gets changed in the future, be sure to update the Makefile references
-	// for the build-time injection of the Git Tag, Commit, etc.
-	"github.com/go-vela/vela-kaniko/version"
 	"github.com/spf13/afero"
 )
 
@@ -22,12 +16,27 @@ import (
 var (
 	OpenSSHVersion = "unknown"
 	SSHPassVersion = "unknown"
+	PluginVersion  = "unknown"
+
+	// These are extracted during runtime using Go 1.18's build info in the init step.
+	GitCommit  = "unknown"
+	DirtyBuild = false
 )
 
-var (
-	// PluginVersion provides a common place to pull the plugin configuration from.
-	PluginVersion = version.New()
+func init() {
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		for _, setting := range buildInfo.Settings {
+			switch setting.Key {
+			case "vcs.revision":
+				GitCommit = setting.Value
+			case "vcs.modified":
+				DirtyBuild = setting.Value == "true"
+			}
+		}
+	}
+}
 
+var (
 	// ErrMissingSCP is returned when the scp binary isn't found in the locations below.
 	ErrMissingSCP = errors.New("can't find scp binary")
 

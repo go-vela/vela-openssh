@@ -6,7 +6,8 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "^Makefile$"
+        "^Makefile$",
+        "^Dockerfile\\.ssh-server$"
       ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)"

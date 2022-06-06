@@ -5,3 +5,4 @@ AllowTcpForwarding yes
 GatewayPorts yes
 X11Forwarding yes
 PasswordAuthentication yes
+Subsystem sftp /usr/lib/ssh/sftp-server

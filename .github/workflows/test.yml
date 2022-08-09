@@ -71,19 +71,21 @@ jobs:
         grep "^SSHPASS_VERSION.*=" Makefile >> $GITHUB_ENV
 
     - name: publish scp
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v4
       with:
         name: target/vela-scp
         cache: true
         dockerfile: Dockerfile.scp
         no_push: true
         buildargs: OPENSSH_VERSION,SSHPASS_VERSION
+        tags: "test"
 
     - name: publish ssh
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v4
       with:
         name: target/vela-ssh
         cache: true
         dockerfile: Dockerfile.ssh
         no_push: true
         buildargs: OPENSSH_VERSION,SSHPASS_VERSION
+        tags: "test"

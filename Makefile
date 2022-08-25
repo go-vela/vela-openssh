@@ -8,7 +8,7 @@
 # the integration tests, and the static build flags for Go.
 # Note: No space between the equals and the value else issues arise.
 # renovate: datasource=repology depName=alpine_3_16/openssh versioning=loose
-OPENSSH_VERSION=9.0_p1-r1
+OPENSSH_VERSION=9.0_p1-r2
 # renovate: datasource=repology depName=alpine_3_16/sshpass versioning=loose
 SSHPASS_VERSION=1.09-r0
 

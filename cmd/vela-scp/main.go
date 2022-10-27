@@ -116,7 +116,7 @@ func run(c *cli.Context) error {
 
 	logrus.WithFields(logrus.Fields{
 		"code":            "https://github.com/go-vela/vela-openssh",
-		"docs":            "https://go-vela.github.io/docs/plugins/registry/scp",
+		"docs":            "https://go-vela.github.io/docs/plugins/registry/pipeline/scp",
 		"registry":        "https://hub.docker.com/r/target/vela-scp",
 		"commit":          openssh.GitCommit,
 		"version-plugin":  openssh.PluginVersion,

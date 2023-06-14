@@ -10,11 +10,18 @@ on:
 jobs:
   unit-test:
     runs-on: ubuntu-latest
-    container:
-      image: golang:1.18
+
     steps:
     - name: clone
       uses: actions/checkout@v3
+
+    - name: install go
+      uses: actions/setup-go@v4
+      with:
+        # use version from go.mod file
+        go-version-file: 'go.mod'
+        cache: true
+        check-latest: true
 
     - name: test
       run: |
@@ -71,7 +78,7 @@ jobs:
         grep "^SSHPASS_VERSION.*=" Makefile >> $GITHUB_ENV
 
     - name: publish scp
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: target/vela-scp
         cache: true
@@ -81,7 +88,7 @@ jobs:
         buildargs: OPENSSH_VERSION,SSHPASS_VERSION
 
     - name: publish ssh
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: target/vela-ssh
         cache: true

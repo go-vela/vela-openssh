@@ -6,7 +6,7 @@
 ##     docker build --no-cache -t vela-scp:local .     ##
 ###############################################################
 
-FROM alpine:3.16@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad
+FROM alpine:3.16@sha256:cbe5d5973103a2d03408d1689a6efde4ea4920bde9f4b51fe7872e60ce2d8e56
 
 # Build args to be used from the Makefile
 ARG OPENSSH_VERSION

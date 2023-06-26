@@ -42,14 +42,19 @@ jobs:
     - name: checkout
       uses: actions/checkout@v3
 
-    - name: build for integration test
-      uses: docker://golang:1.20
+    - name: install go
+      uses: actions/setup-go@v4
       with:
-        entrypoint: make
-        args: build-static-ci
+        # use version from go.mod file
+        go-version-file: 'go.mod'
+        cache: true
+        check-latest: true
+
+    - name: build for integration test
       env:
         GOOS: linux
         CGO_ENABLED: '0'
+      run: make build-static-ci
 
     - name: integration test with fake server
       run: make docker-build && make docker-test

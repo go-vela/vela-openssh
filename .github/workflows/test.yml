@@ -10,11 +10,18 @@ on:
 jobs:
   unit-test:
     runs-on: ubuntu-latest
-    container:
-      image: golang:1.18
+
     steps:
     - name: clone
       uses: actions/checkout@v3
+
+    - name: install go
+      uses: actions/setup-go@v4
+      with:
+        # use version from go.mod file
+        go-version-file: 'go.mod'
+        cache: true
+        check-latest: true
 
     - name: test
       run: |
@@ -35,28 +42,40 @@ jobs:
     - name: checkout
       uses: actions/checkout@v3
 
-    - name: build for integration test
-      uses: docker://golang:1.18
+    - name: install go
+      uses: actions/setup-go@v4
       with:
-        entrypoint: make
-        args: build-static-ci
+        # use version from go.mod file
+        go-version-file: 'go.mod'
+        cache: true
+        check-latest: true
+
+    - name: build for integration test
       env:
         GOOS: linux
         CGO_ENABLED: '0'
+      run: make build-static-ci
 
     - name: integration test with fake server
       run: make docker-build && make docker-test
 
   gha-publish-test:
     runs-on: ubuntu-latest
-    container:
-      image: golang:1.18
+
     steps:
     - name: clone
       uses: actions/checkout@v3
       with:
         # ensures we fetch tag history for the repository
         fetch-depth: 0
+
+    - name: install go
+      uses: actions/setup-go@v4
+      with:
+        # use version from go.mod file
+        go-version-file: 'go.mod'
+        cache: true
+        check-latest: true
 
     - name: build
       env:
@@ -71,7 +90,7 @@ jobs:
         grep "^SSHPASS_VERSION.*=" Makefile >> $GITHUB_ENV
 
     - name: publish scp
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: target/vela-scp
         cache: true
@@ -81,7 +100,7 @@ jobs:
         buildargs: OPENSSH_VERSION,SSHPASS_VERSION
 
     - name: publish ssh
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: target/vela-ssh
         cache: true

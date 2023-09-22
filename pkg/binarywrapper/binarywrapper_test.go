@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 // binarywrapper_test was chosen to be blackbox testing of the wrapper
 // to try and better understand the behavior that end consumers of the wrapper

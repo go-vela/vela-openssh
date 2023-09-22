@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 // This package wraps the ssh portion of the OpenSSH binaries to allow
 // for executing scripts and commands on remote systems.

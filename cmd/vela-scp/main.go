@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package main
 
@@ -20,7 +18,7 @@ func main() {
 	app := &cli.App{
 		Name:      "vela-scp",
 		Usage:     "Vela plugin wrapping the scp binary.",
-		Copyright: "Copyright (c) 2022 Target Brands, Inc. All rights reserved.",
+		Copyright: "Copyright 2022 Target Brands, Inc. All rights reserved.",
 		Authors: []*cli.Author{
 			{
 				Name:  "Vela Admins",

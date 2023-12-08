@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - name: clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
     - name: install go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
       with:
         # use version from go.mod file
         go-version-file: 'go.mod'
@@ -28,7 +28,7 @@ jobs:
         go test -covermode=atomic -coverprofile=coverage.out ./...
 
     - name: coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: coverage.out
@@ -40,10 +40,10 @@ jobs:
 
     steps:
     - name: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
     - name: install go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
       with:
         # use version from go.mod file
         go-version-file: 'go.mod'
@@ -64,13 +64,13 @@ jobs:
 
     steps:
     - name: clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       with:
         # ensures we fetch tag history for the repository
         fetch-depth: 0
 
     - name: install go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
       with:
         # use version from go.mod file
         go-version-file: 'go.mod'
@@ -90,7 +90,7 @@ jobs:
         grep "^SSHPASS_VERSION.*=" Makefile >> $GITHUB_ENV
 
     - name: publish scp
-      uses: elgohr/Publish-Docker-Github-Action@v5
+      uses: elgohr/Publish-Docker-Github-Action@eb53b3ec07136a6ebaed78d8135806da64f7c7e2 # v5
       with:
         name: target/vela-scp
         cache: true
@@ -100,7 +100,7 @@ jobs:
         buildargs: OPENSSH_VERSION,SSHPASS_VERSION
 
     - name: publish ssh
-      uses: elgohr/Publish-Docker-Github-Action@v5
+      uses: elgohr/Publish-Docker-Github-Action@eb53b3ec07136a6ebaed78d8135806da64f7c7e2 # v5
       with:
         name: target/vela-ssh
         cache: true

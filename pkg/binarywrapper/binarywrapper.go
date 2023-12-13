@@ -160,7 +160,7 @@ func (p *Plugin) Exec() error {
 				logrus.Error(errorBuffer.String())
 			}
 
-			return fmt.Errorf("%w: %s", ErrExec, err)
+			return fmt.Errorf("%w: %w", ErrExec, err)
 		}
 
 		if outBuffer.Len() > 0 {
@@ -181,7 +181,7 @@ func (p *Plugin) Exec() error {
 			if errors.Is(err, os.ErrNotExist) {
 				return fmt.Errorf("%w: %s", ErrMissingBinary, p.Binary())
 			}
-			return fmt.Errorf("%w: %s", ErrExec, err)
+			return fmt.Errorf("%w: %w", ErrExec, err)
 		}
 	} else {
 		return fmt.Errorf("%w: %d", ErrUnknownExecStyle, p.ExecStyle)

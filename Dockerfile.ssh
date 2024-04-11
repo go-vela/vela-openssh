@@ -4,7 +4,7 @@
 ##     docker build --no-cache -t vela-ssh:local .     ##
 ###############################################################
 
-FROM alpine:3.19@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48
+FROM alpine:3.19.1@sha256:6457d53fb065d6f250e1504b9bc42d5b6c65941d57532c072d929dd0628977d0
 
 # Build args to be used from the Makefile
 ARG OPENSSH_VERSION

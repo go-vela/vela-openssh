@@ -1,8 +1,8 @@
 FROM alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5
 
-# renovate: datasource=repology depName=alpine_3_19/openssh versioning=loose
+# renovate: datasource=repology depName=alpine_3_20_2/openssh versioning=loose
 ENV OPENSSH_VERSION=9.7_p1-r4
-# renovate: datasource=repology depName=alpine_3_19/openssh-sftp-server versioning=loose
+# renovate: datasource=repology depName=alpine_3_20_2/openssh-sftp-server versioning=loose
 ENV OPENSSH_SFTP_SERVER_VERSION=9.7_p1-r4
 
 RUN apk add openssh=${OPENSSH_VERSION} openssh-sftp-server=${OPENSSH_SFTP_SERVER_VERSION} && \

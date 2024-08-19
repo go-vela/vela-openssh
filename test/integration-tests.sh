@@ -38,7 +38,7 @@ FAILURE_MESSAGES=()
 setup() {
   local BINARY=$1
   printf "### Building images for %s tests\n" "$BINARY"
-  if ! docker-compose -f "docker-compose-$BINARY.yml" build; then
+  if ! docker compose -f "docker-compose-$BINARY.yml" build; then
     printf "❌ Unable to build integration test %s image" "$BINARY"
     exit 1
   fi
@@ -50,7 +50,7 @@ run_tests() {
   printf "### Testing vela-%s:local image\n" "$BINARY"
   for TEST_NAME in "$@"; do
     printf "#### Executing test '%s-%s'\n" "$BINARY" "$TEST_NAME"
-    if ! docker-compose -f "docker-compose-$BINARY.yml" run --rm "$TEST_NAME"; then
+    if ! docker compose -f "docker-compose-$BINARY.yml" run --rm "$TEST_NAME"; then
       FAILURE_MESSAGES+=("❌ Failure testing '$BINARY-$TEST_NAME'")
     fi
   done
@@ -59,8 +59,8 @@ run_tests() {
 teardown() {
   local BINARY=$1
   printf "###Cleaning up %s containers\n" "$BINARY"
-  docker-compose -f "docker-compose-$BINARY.yml" stop -t 1
-  docker-compose -f "docker-compose-$BINARY.yml" down
+  docker compose -f "docker-compose-$BINARY.yml" stop -t 1
+  docker compose -f "docker-compose-$BINARY.yml" down
 }
 
 ##############

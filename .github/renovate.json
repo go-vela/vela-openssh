@@ -6,9 +6,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^Makefile$",
-        "^Dockerfile\\.ssh-server$"
+      "managerFilePatterns": [
+        "/^Makefile$/",
+        "/^Dockerfile\\.ssh-server$/"
       ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)"

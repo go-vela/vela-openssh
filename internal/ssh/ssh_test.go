@@ -4,12 +4,11 @@ package ssh
 
 import (
 	"errors"
-	"strings"
-	"testing"
-
 	"github.com/go-vela/vela-openssh/internal/openssh"
 	"github.com/go-vela/vela-openssh/internal/testutils"
 	"github.com/spf13/afero"
+	"strings"
+	"testing"
 )
 
 var (

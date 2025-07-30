@@ -7,9 +7,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/spf13/afero"
+
 	"github.com/go-vela/vela-openssh/internal/openssh"
 	"github.com/go-vela/vela-openssh/internal/testutils"
-	"github.com/spf13/afero"
 )
 
 var (

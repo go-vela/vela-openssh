@@ -14,8 +14,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-vela/vela-openssh/pkg/binarywrapper"
 	"github.com/sirupsen/logrus"
+
+	"github.com/go-vela/vela-openssh/pkg/binarywrapper"
 )
 
 const (

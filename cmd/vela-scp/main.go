@@ -3,11 +3,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"net/mail"
 	"os"
 
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	"github.com/go-vela/vela-openssh/internal/openssh"
 	"github.com/go-vela/vela-openssh/internal/scp"
@@ -15,86 +17,128 @@ import (
 )
 
 func main() {
-	app := &cli.App{
+	cmd := cli.Command{
 		Name:      "vela-scp",
 		Usage:     "Vela plugin wrapping the scp binary.",
 		Copyright: "Copyright 2022 Target Brands, Inc. All rights reserved.",
-		Authors: []*cli.Author{
-			{
-				Name:  "Vela Admins",
-				Email: "vela@target.com",
+		Authors: []any{
+			&mail.Address{
+				Name:    "Vela Admins",
+				Address: "vela@target.com",
 			},
 		},
-		Action: run,
 		// The version field looks gross but in practice is really only seen and used in integration tests
 		// or when a plugin is misconfigured. We should log the version information of dependent binaries
 		// to assist with debugging why a plugin might be failing to operate in a way users expect.
 		Version: fmt.Sprintf("Plugin: %s - OpenSSH: %s - SSHPass: %s", openssh.PluginVersion, openssh.OpenSSHVersion, openssh.SSHPassVersion),
-		Flags: []cli.Flag{
-			&cli.StringSliceFlag{
-				Name:     "source",
-				Usage:    "source parameter for scp (see manual 'man scp')",
-				EnvVars:  []string{"PARAMETER_SOURCE", "SOURCE"},
-				FilePath: "/vela/parameters/vela-scp/source,/vela/secrets/vela-scp/source",
-				Required: true,
-			},
-			&cli.StringFlag{
-				Name:     "target",
-				Usage:    "target parameter for scp (see manual 'man scp')",
-				EnvVars:  []string{"PARAMETER_TARGET", "TARGET"},
-				FilePath: "/vela/parameters/vela-scp/target,/vela/secrets/vela-scp/target",
-				Required: true,
-			},
-			&cli.StringSliceFlag{
-				Name:     "identity-file.path",
-				Usage:    "path to the identity file parameter for scp (see manual 'man scp')",
-				EnvVars:  []string{"PARAMETER_IDENTITY_FILE_PATH", "IDENTITY_FILE_PATH", "PARAMETER_SSH_KEY_PATH", "SSH_KEY_PATH"},
-				FilePath: "/vela/parameters/vela-scp/identity-file.path,/vela/secrets/vela-scp/identity-file.path",
-			},
-			&cli.StringFlag{
-				Name:     "identity-file.contents",
-				Usage:    "contents of the identity-file (not the path, the real deal)",
-				EnvVars:  []string{"PARAMETER_IDENTITY_FILE_CONTENTS", "IDENTITY_FILE_CONTENTS", "PARAMETER_SSH_KEY", "SSH_KEY"},
-				FilePath: "/vela/parameters/vela-scp/identity-file.contents,/vela/secrets/vela-scp/identity-file.contents",
-			},
-			&cli.StringSliceFlag{
-				Name:     "scp.flag",
-				Usage:    "any additional flags for scp can be specified here",
-				EnvVars:  []string{"PARAMETER_SCP_FLAG", "SCP_FLAG"},
-				FilePath: "/vela/parameters/vela-scp/scp.flag,/vela/secrets/vela-scp/scp.flag",
-			},
-			&cli.StringFlag{
-				Name:     "sshpass.password",
-				Usage:    "password for use with destination target (used with sshpass)",
-				EnvVars:  []string{"PARAMETER_SSHPASS_PASSWORD", "PARAMETER_PASSWORD", "SSHPASS_PASSWORD", "PASSWORD"},
-				FilePath: "/vela/parameters/vela-scp/sshpass.password,/vela/secrets/vela-scp/sshpass.password",
-			},
-			&cli.StringFlag{
-				Name:     "sshpass.passphrase",
-				Usage:    "passphrase for use with identity file (used with sshpass)",
-				EnvVars:  []string{"PARAMETER_SSHPASS_PASSPHRASE", "SSHPASS_PASSPHRASE"},
-				FilePath: "/vela/parameters/vela-scp/sshpass.passphrase,/vela/secrets/vela-scp/sshpass.passphrase",
-			},
-			&cli.StringSliceFlag{
-				Name:     "sshpass.flag",
-				Usage:    "any additional flags for sshpass can be specified here)",
-				EnvVars:  []string{"PARAMETER_SSHPASS_FLAG", "SSHPASS_FLAG"},
-				FilePath: "/vela/parameters/vela-scp/sshpass.flag,/vela/secrets/vela-scp/sshpass.flag",
-			},
-			&cli.StringFlag{
-				Name:    "ci",
-				Usage:   "set the CI environment (if $CI is set output tries to be friendlier)",
-				EnvVars: []string{"PARAMETER_CI", "CI"},
-			},
+		Action:  run,
+	}
+
+	cmd.Flags = []cli.Flag{
+		&cli.StringSliceFlag{
+			Name:     "source",
+			Usage:    "source parameter for scp (see manual 'man scp')",
+			Required: true,
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_SOURCE"),
+				cli.EnvVar("SOURCE"),
+				cli.File("/vela/parameters/vela-scp/source"),
+				cli.File("/vela/secrets/vela-scp/source"),
+			),
+		},
+		&cli.StringFlag{
+			Name:     "target",
+			Usage:    "target parameter for scp (see manual 'man scp')",
+			Required: true,
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_TARGET"),
+				cli.EnvVar("TARGET"),
+				cli.File("/vela/parameters/vela-scp/target"),
+				cli.File("/vela/secrets/vela-scp/target"),
+			),
+		},
+		&cli.StringSliceFlag{
+			Name:  "identity-file.path",
+			Usage: "path to the identity file parameter for scp (see manual 'man scp')",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_IDENTITY_FILE_PATH"),
+				cli.EnvVar("IDENTITY_FILE_PATH"),
+				cli.EnvVar("PARAMETER_SSH_KEY_PATH"),
+				cli.EnvVar("SSH_KEY_PATH"),
+				cli.File("/vela/parameters/vela-scp/identity-file.path"),
+				cli.File("/vela/secrets/vela-scp/identity-file.path"),
+			),
+		},
+		&cli.StringFlag{
+			Name:  "identity-file.contents",
+			Usage: "contents of the identity-file (not the path, the real deal)",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_IDENTITY_FILE_CONTENTS"),
+				cli.EnvVar("IDENTITY_FILE_CONTENTS"),
+				cli.EnvVar("PARAMETER_SSH_KEY"),
+				cli.EnvVar("SSH_KEY"),
+				cli.File("/vela/parameters/vela-scp/identity-file.contents"),
+				cli.File("/vela/secrets/vela-scp/identity-file.contents"),
+			),
+		},
+		&cli.StringSliceFlag{
+			Name:  "scp.flag",
+			Usage: "any additional flags for scp can be specified here",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_SCP_FLAG"),
+				cli.EnvVar("SCP_FLAG"),
+				cli.File("/vela/parameters/vela-scp/scp.flag"),
+				cli.File("/vela/secrets/vela-scp/scp.flag"),
+			),
+		},
+		&cli.StringFlag{
+			Name:  "sshpass.password",
+			Usage: "password for use with destination target (used with sshpass)",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_SSHPASS_PASSWORD"),
+				cli.EnvVar("PARAMETER_PASSWORD"),
+				cli.EnvVar("SSHPASS_PASSWORD"),
+				cli.EnvVar("PASSWORD"),
+				cli.File("/vela/parameters/vela-scp/sshpass.password"),
+				cli.File("/vela/secrets/vela-scp/sshpass.password"),
+			),
+		},
+		&cli.StringFlag{
+			Name:  "sshpass.passphrase",
+			Usage: "passphrase for use with identity file (used with sshpass)",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_SSHPASS_PASSPHRASE"),
+				cli.EnvVar("SSHPASS_PASSPHRASE"),
+				cli.File("/vela/parameters/vela-scp/sshpass.passphrase"),
+				cli.File("/vela/secrets/vela-scp/sshpass.passphrase"),
+			),
+		},
+		&cli.StringSliceFlag{
+			Name:  "sshpass.flag",
+			Usage: "any additional flags for sshpass can be specified here)",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_SSHPASS_FLAG"),
+				cli.EnvVar("SSHPASS_FLAG"),
+				cli.File("/vela/parameters/vela-scp/sshpass.flag"),
+				cli.File("/vela/secrets/vela-scp/sshpass.flag"),
+			),
+		},
+		&cli.StringFlag{
+			Name:  "ci",
+			Usage: "set the CI environment (if $CI is set output tries to be friendlier)",
+			Sources: cli.NewValueSourceChain(
+				cli.EnvVar("PARAMETER_CI"),
+				cli.EnvVar("CI"),
+			),
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		logrus.Fatal(err)
 	}
 }
 
-func run(c *cli.Context) error {
+func run(_ context.Context, c *cli.Command) error {
 	if c.IsSet("ci") {
 		logrus.SetFormatter(&logrus.TextFormatter{
 			DisableColors: true,
@@ -135,5 +179,6 @@ func run(c *cli.Context) error {
 		},
 	}
 
+	//nolint:contextcheck // we are not using a context here
 	return bp.Exec()
 }

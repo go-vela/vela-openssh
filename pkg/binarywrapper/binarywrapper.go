@@ -8,6 +8,7 @@ package binarywrapper
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -146,7 +147,7 @@ func (p *Plugin) Exec() error {
 		var outBuffer, errorBuffer bytes.Buffer
 
 		// #nosec G204
-		cmd := exec.Command(p.Binary(), expandedArgs...)
+		cmd := exec.CommandContext(context.Background(), p.Binary(), expandedArgs...)
 		cmd.Env = os.Environ()
 		cmd.Stdout = &outBuffer
 		cmd.Stderr = &errorBuffer
@@ -181,6 +182,7 @@ func (p *Plugin) Exec() error {
 			if errors.Is(err, os.ErrNotExist) {
 				return fmt.Errorf("%w: %s", ErrMissingBinary, p.Binary())
 			}
+
 			return fmt.Errorf("%w: %w", ErrExec, err)
 		}
 	} else {

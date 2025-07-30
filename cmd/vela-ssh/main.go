@@ -182,5 +182,6 @@ func run(_ context.Context, c *cli.Command) error {
 		},
 	}
 
+	//nolint:contextcheck // we are not using a context here
 	return bp.Exec()
 }

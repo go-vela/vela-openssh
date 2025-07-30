@@ -182,6 +182,7 @@ func (p *Plugin) Exec() error {
 			if errors.Is(err, os.ErrNotExist) {
 				return fmt.Errorf("%w: %s", ErrMissingBinary, p.Binary())
 			}
+
 			return fmt.Errorf("%w: %w", ErrExec, err)
 		}
 	} else {

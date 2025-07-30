@@ -10,11 +10,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/go-vela/vela-openssh/pkg/binarywrapper"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/sirupsen/logrus"
+
+	"github.com/go-vela/vela-openssh/pkg/binarywrapper"
 )
 
 const (

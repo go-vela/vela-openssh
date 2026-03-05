@@ -1,6 +1,6 @@
 module github.com/go-vela/vela-openssh
 
-go 1.24.5
+go 1.25.7
 
 require (
 	github.com/sirupsen/logrus v1.9.4

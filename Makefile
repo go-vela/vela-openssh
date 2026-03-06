@@ -5,9 +5,9 @@
 # They're used in the Dockerfile the GitHub Actions workflow,
 # the integration tests, and the static build flags for Go.
 # Note: No space between the equals and the value else issues arise.
-# renovate: datasource=repology depName=alpine_3_22_1/openssh versioning=loose
-OPENSSH_VERSION=10.0_p1-r7
-# renovate: datasource=repology depName=alpine_3_22_1/sshpass versioning=loose
+# renovate: datasource=repology depName=alpine_3_23_3/openssh versioning=loose
+OPENSSH_VERSION=10.2_p1-r0
+# renovate: datasource=repology depName=alpine_3_23_3/sshpass versioning=loose
 SSHPASS_VERSION=1.10-r0
 
 # check if a git tag is already set

@@ -3,9 +3,9 @@ module github.com/go-vela/vela-openssh
 go 1.25.7
 
 require (
-	github.com/sirupsen/logrus v1.9.4
+	github.com/sirupsen/logrus v1.10.2
 	github.com/spf13/afero v1.15.0
-	github.com/urfave/cli/v3 v3.7.0
+	github.com/urfave/cli/v3 v3.11.0
 )
 
 require (
